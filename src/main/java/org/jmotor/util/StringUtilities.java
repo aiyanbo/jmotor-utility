@@ -13,6 +13,7 @@ import java.util.StringTokenizer;
  */
 public class StringUtilities {
     public static final String EMPTY = "";
+    public static final String BLANK_SPACE = " ";
     public static final String AND_MARK = "&";
     public static final String COMMA = ",";
     public static final String SEMICOLON = ";";
