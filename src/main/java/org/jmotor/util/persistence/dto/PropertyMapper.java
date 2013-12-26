@@ -23,6 +23,13 @@ public class PropertyMapper {
         entries.put(columnName, propertyName);
     }
 
+    public void add(String columnName, String propertyName) {
+        insertOrders.add(columnName);
+        if (!entries.containsKey(columnName)) {
+            entries.put(columnName, propertyName);
+        }
+    }
+
     public List<String> keyList() {
         return insertOrders;
     }

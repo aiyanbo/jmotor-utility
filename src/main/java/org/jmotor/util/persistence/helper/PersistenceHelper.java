@@ -1,8 +1,13 @@
 package org.jmotor.util.persistence.helper;
 
+import org.jmotor.util.ObjectUtilities;
+import org.jmotor.util.persistence.dto.ColumnMeta;
 import org.jmotor.util.persistence.dto.DataSources;
+import org.jmotor.util.persistence.dto.PropertyMapper;
+import org.jmotor.util.persistence.dto.SqlStatement;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,13 +36,30 @@ public class PersistenceHelper {
                 dataSources.getPassword());
     }
 
+    public static int executeUpdate(Connection connection, SqlExecuteEvent event, String sql, Object... parameters) throws SQLException {
+        if (null == event) {
+            throw new NullPointerException("Sql execute event can't be empty.");
+        }
+        return execute_update(connection, event, sql, parameters);
+    }
+
     public static int executeUpdate(Connection connection, String sql, Object... parameters) throws SQLException {
+        return execute_update(connection, null, sql, parameters);
+    }
+
+    private static int execute_update(Connection connection, SqlExecuteEvent event, String sql, Object... parameters) throws SQLException {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = connection.prepareStatement(sql);
             setParameters(preparedStatement, parameters);
+            if (null != event) {
+                event.executeBefore();
+            }
             return preparedStatement.executeUpdate();
         } finally {
+            if (null != event) {
+                event.executeAfter();
+            }
             if (preparedStatement != null) {
                 try {
                     preparedStatement.close();
@@ -49,13 +71,29 @@ public class PersistenceHelper {
 
     }
 
+    public static <T> List<T> executeQuery(Connection connection, QueryCallback<T> callback, SqlExecuteEvent event,
+                                           String sql, Object... parameters) throws SQLException {
+        if (null == event) {
+            throw new NullPointerException("Sql execute event can't be empty.");
+        }
+        return execute_query(connection, callback, event, sql, parameters);
+    }
+
     public static <T> List<T> executeQuery(Connection connection, QueryCallback<T> callback,
                                            String sql, Object... parameters) throws SQLException {
+        return execute_query(connection, callback, null, sql, parameters);
+    }
+
+    private static <T> List<T> execute_query(Connection connection, QueryCallback<T> callback, SqlExecuteEvent event,
+                                             String sql, Object... parameters) throws SQLException {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
             preparedStatement = connection.prepareStatement(sql);
             setParameters(preparedStatement, parameters);
+            if (null != event) {
+                event.executeBefore();
+            }
             resultSet = preparedStatement.executeQuery();
             int fetchSize = resultSet.getFetchSize();
             List<T> result = new ArrayList<T>(fetchSize > 5 ? fetchSize : 5);
@@ -64,6 +102,9 @@ public class PersistenceHelper {
             }
             return result;
         } finally {
+            if (null != event) {
+                event.executeAfter();
+            }
             if (null != resultSet) {
                 try {
                     resultSet.close();
@@ -94,4 +135,62 @@ public class PersistenceHelper {
             }
         }
     }
+
+    public static List<String> getColumnNames(Connection connection, String entity) throws SQLException {
+        ResultSet resultSet = null;
+        try {
+            DatabaseMetaData metaData = connection.getMetaData();
+            resultSet = metaData.getColumns(null, null, entity, null);
+            List<String> columns = new ArrayList<String>(resultSet.getFetchSize());
+            while (resultSet.next()) {
+                columns.add(resultSet.getString(4));
+            }
+            return columns;
+        } finally {
+            if (null != resultSet) {
+                resultSet.close();
+            }
+        }
+    }
+
+    public static List<ColumnMeta> getColumns(Connection connection, String entity) throws SQLException {
+        ResultSet resultSet = null;
+        try {
+            DatabaseMetaData metaData = connection.getMetaData();
+            List<ColumnMeta> columns = new ArrayList<ColumnMeta>(10);
+            resultSet = metaData.getColumns(null, null, entity, null);
+            while (resultSet.next()) {
+                ColumnMeta columnMeta = new ColumnMeta();
+                columnMeta.setName(resultSet.getString(4));
+                columnMeta.setType(resultSet.getInt(5));
+                columns.add(columnMeta);
+            }
+            return columns;
+        } finally {
+            if (null != resultSet) {
+                resultSet.close();
+            }
+        }
+    }
+
+    public static Object[] getParameters(Object object, SqlStatement sqlStatement) {
+        PropertyMapper propertyMapper = sqlStatement.getPropertyMapper();
+        Object[] parameters = new Object[propertyMapper.size()];
+        int i = 0;
+        for (String property : propertyMapper.keyArray()) {
+            parameters[i++] = ObjectUtilities.getPropertyValue(object, property);
+        }
+        return parameters;
+    }
+
+    public static void closeConnection(Connection connection) {
+        try {
+            if (null != connection && !connection.isClosed()) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            //ignore
+        }
+    }
+
 }
