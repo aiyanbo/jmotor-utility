@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -100,5 +102,65 @@ public class ResourceUtilities {
     public static String getProperty(Properties properties, String key) {
         String value = properties.getProperty(key);
         return StringUtilities.trim(value);
+    }
+
+    /**
+     * Get properties by namespace as a map
+     * <code>
+     * props.setProperty("jdbc.username");
+     * props.setProperty("jdbc.password");
+     * props.setProperty("http.username");
+     * props.setProperty("http.password");
+     * <p/>
+     * jdbcProperties=ResourcesUtilities.getProperties(props,"jdbc");
+     * <p/>
+     * jdbcProperties has to key-value pairs:
+     * 1. jdbc.username
+     * 2. jdbc.password
+     * <code/>
+     *
+     * @param properties {@link java.util.Properties}
+     * @param namespace  namespace
+     * @return {@link java.util.Map}
+     */
+    public static Map<String, String> getPropertiesAsMap(Properties properties, String namespace) {
+        Map<String, String> pairs = new HashMap<String, String>(properties.size());
+        int index = namespace.length() + 1;
+        for (String property : properties.stringPropertyNames()) {
+            if (property.startsWith(namespace)) {
+                pairs.put(property.substring(index), properties.getProperty(property));
+            }
+        }
+        return pairs;
+    }
+
+    /**
+     * Get properties by namespace
+     * <code>
+     * props.setProperty("jdbc.username");
+     * props.setProperty("jdbc.password");
+     * props.setProperty("http.username");
+     * props.setProperty("http.password");
+     * <p/>
+     * jdbcProperties=ResourcesUtilities.getProperties(props,"jdbc");
+     * <p/>
+     * jdbcProperties has to key-value pairs:
+     * 1. jdbc.username
+     * 2. jdbc.password
+     * <code/>
+     *
+     * @param properties {@link java.util.Properties}
+     * @param namespace  namespace
+     * @return {@link java.util.Map}
+     */
+    public static Properties getProperties(Properties properties, String namespace) {
+        Properties props = new Properties();
+        int index = namespace.length() + 1;
+        for (String property : properties.stringPropertyNames()) {
+            if (property.startsWith(namespace)) {
+                props.setProperty(property.substring(index), properties.getProperty(property));
+            }
+        }
+        return props;
     }
 }
