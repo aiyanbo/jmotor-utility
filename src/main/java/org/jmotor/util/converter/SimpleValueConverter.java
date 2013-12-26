@@ -1,5 +1,7 @@
 package org.jmotor.util.converter;
 
+import org.jmotor.util.StringUtilities;
+
 import java.math.BigDecimal;
 
 /**
@@ -14,6 +16,9 @@ public class SimpleValueConverter {
     }
 
     public static Object convert(Class<?> type, String value) {
+        if (StringUtilities.isBlank(value)) {
+            return null;
+        }
         String typeName = type.getName();
         if (String.class.getName().equals(typeName)) {
             return value;
