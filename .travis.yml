@@ -4,7 +4,7 @@ jdk:
   - openjdk7
   - oraclejdk7
 
-install: mvn clean install
+install: mvn clean install -DskipTests=true
 
 notifications:
   email:
