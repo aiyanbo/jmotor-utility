@@ -1,7 +1,7 @@
 package org.jmotor.util;
 
-import org.jmotor.util.meta.Student;
 import junit.framework.TestCase;
+import org.jmotor.util.meta.Student;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -29,8 +29,12 @@ public class ObjectUtilitiesTest extends TestCase {
         student.setName("Jobs");
         student.setClassName("IT");
         String fileName = ObjectUtilities.writeObject(student);
-        Student readObject = ObjectUtilities.readObject(fileName);
-        System.out.println(readObject);
+        if (StringUtilities.isBlank(fileName)) {
+            System.out.println("Failure");
+        } else {
+            Student readObject = ObjectUtilities.readObject(fileName);
+            System.out.println(readObject);
+        }
     }
 
     public void test() {
