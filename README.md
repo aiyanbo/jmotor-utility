@@ -5,6 +5,10 @@ jmotor-utility
 
 Jmotor utilities
 
+Requires
+--------
+
+- jdk1.6+
 
 Build
 ------
