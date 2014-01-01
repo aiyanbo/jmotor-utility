@@ -188,7 +188,7 @@ public class StringUtilities {
         if (words >= tokenizer.countTokens()) {
             return _sentence;
         }
-        List<String> tokens = new ArrayList<>(words);
+        List<String> tokens = new ArrayList<String>(words);
         for (int i = 0; i < words; i++) {
             tokens.add(tokenizer.nextToken());
         }
