@@ -1,9 +1,9 @@
 package org.jmotor.util.aop.callback;
 
-import org.jmotor.util.ClassUtilities;
-import org.jmotor.util.aop.meta.StudentMeta;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
+import org.jmotor.util.ClassUtilities;
+import org.jmotor.util.aop.meta.StudentMeta;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;

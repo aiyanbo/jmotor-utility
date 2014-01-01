@@ -1,10 +1,10 @@
 package org.jmotor.util;
 
+import junit.framework.TestCase;
 import org.jmotor.util.interfaces.SupperInterface;
 import org.jmotor.util.interfaces.impl.ResourceAdapter;
 import org.jmotor.util.meta.AbstractClass;
 import org.jmotor.util.meta.Student;
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.Collection;

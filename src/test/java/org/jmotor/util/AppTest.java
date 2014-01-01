@@ -1,7 +1,7 @@
 package org.jmotor.util;
 
-import org.jmotor.util.meta.Student;
 import junit.framework.TestCase;
+import org.jmotor.util.meta.Student;
 import org.junit.Test;
 
 import java.io.IOException;

@@ -1,11 +1,11 @@
 package org.jmotor.util;
 
-import org.jmotor.util.converter.SimpleValueConverter;
-import org.jmotor.util.exception.XMLParserException;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
+import org.jmotor.util.converter.SimpleValueConverter;
+import org.jmotor.util.exception.XMLParserException;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

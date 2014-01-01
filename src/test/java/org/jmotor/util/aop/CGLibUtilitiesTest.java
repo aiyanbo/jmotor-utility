@@ -1,10 +1,10 @@
 package org.jmotor.util.aop;
 
+import junit.framework.TestCase;
 import org.jmotor.util.aop.callback.DataLoader;
 import org.jmotor.util.aop.cglib.CGLibUtilities;
 import org.jmotor.util.aop.meta.ClassMeta;
 import org.jmotor.util.aop.meta.StudentMeta;
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package org.jmotor.util;
 
-import org.jmotor.util.meta.Person;
 import junit.framework.TestCase;
+import org.jmotor.util.meta.Person;
 
 import java.util.ArrayList;
 import java.util.List;
