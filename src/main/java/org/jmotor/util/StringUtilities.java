@@ -1,8 +1,6 @@
 package org.jmotor.util;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * Component:Utility
@@ -14,6 +12,7 @@ import java.util.StringTokenizer;
 public class StringUtilities {
     public static final String EMPTY = "";
     public static final String BLANK_SPACE = " ";
+    public static final char BLANK_SPACE_CHAR = ' ';
     public static final String AND_MARK = "&";
     public static final String COMMA = ",";
     public static final String SEMICOLON = ";";
@@ -177,6 +176,19 @@ public class StringUtilities {
             result.append(str);
         }
         return result.toString();
+    }
+
+    public static String splitWords(String sentence, int words) {
+        String _sentence = sentence.trim();
+        StringTokenizer tokenizer = new StringTokenizer(_sentence);
+        if (words >= tokenizer.countTokens()) {
+            return _sentence;
+        }
+        List<String> tokens = new ArrayList<>(words);
+        for (int i = 0; i < words; i++) {
+            tokens.add(tokenizer.nextToken());
+        }
+        return join(tokens, BLANK_SPACE);
     }
 
     public static String surround(String originalText, String surroundText) {
