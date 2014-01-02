@@ -2,7 +2,6 @@ jmotor-utility
 ==============
 
 [![Build Status](https://travis-ci.org/aiyanbo/jmotor-utility.png?branch=master)](https://travis-ci.org/aiyanbo/jmotor-utility)
-[![Views in the last 24 hours](https://sourcegraph.com/api/repos/github.com/aiyanbo/jmotor-utility/counters/views-24h.png)](https://sourcegraph.com/github.com/aiyanbo/jmotor-utility)
 
 Jmotor utilities
 
