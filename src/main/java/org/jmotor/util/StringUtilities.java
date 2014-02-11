@@ -22,6 +22,8 @@ public class StringUtilities {
     public static final String COMMA = ",";
     public static final String SEMICOLON = ";";
     public static final String QUESTION_MARK = "?";
+    public static final String PLUS = "+";
+    public static final String MINUS = "-";
 
     private StringUtilities() {
     }
