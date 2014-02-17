@@ -53,14 +53,17 @@ public class XmlUtilities {
     }
 
     public static Document loadDocument(String name) {
-        InputStream in = null;
+        InputStream is = null;
         try {
-            in = StreamUtilities.getStream4ClassPath(name);
-            return getReader().read(in);
+            is = StreamUtilities.getStream4ClassPath(name);
+            if (null == is) {
+                throw new NullPointerException("Xml stream can not be null.");
+            }
+            return getReader().read(is);
         } catch (DocumentException e) {
             throw new XMLParserException(e.getMessage(), e);
         } finally {
-            CloseableUtilities.closeQuietly(in);
+            CloseableUtilities.closeQuietly(is);
         }
     }
 
