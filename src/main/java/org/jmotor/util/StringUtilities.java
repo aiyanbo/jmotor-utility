@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
  * @author Andy.Ai
  */
 public class StringUtilities {
+    public static final String DOT = ".";
     public static final String EMPTY = "";
     public static final String SLASH = "/";
     public static final String BLANK_SPACE = " ";
