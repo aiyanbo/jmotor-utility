@@ -136,6 +136,21 @@ public class PersistenceHelper {
         }
     }
 
+
+    public static Long getRows(Connection connection, String sql, Object... parameters) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            setParameters(preparedStatement, parameters);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                long count = 0;
+                while (resultSet.next()) {
+                    count++;
+                }
+                return count;
+            }
+        }
+    }
+
+
     public static List<String> getColumnNames(Connection connection, String entity) throws SQLException {
         ResultSet resultSet = null;
         try {
