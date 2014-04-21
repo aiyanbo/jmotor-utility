@@ -67,6 +67,19 @@ public class XmlUtilities {
         }
     }
 
+    public static void fillProperties(Object object, Node node) {
+        PropertyDescriptor[] propertyDescriptors = ObjectUtilities.getPropertyDescriptors(object);
+        for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+            String attributeValue = XmlUtilities.getAttribute(node, propertyDescriptor.getName());
+            if (StringUtilities.isNotBlank(attributeValue)) {
+                Object value = SimpleValueConverter.convert(propertyDescriptor.getPropertyType(), attributeValue);
+                if (value != null) {
+                    ObjectUtilities.setPropertyValue(object, propertyDescriptor.getName(), value);
+                }
+            }
+        }
+    }
+
     public static void fillProperties(Object object, Attributes attributes) {
         PropertyDescriptor[] propertyDescriptors = ObjectUtilities.getPropertyDescriptors(object);
         for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
