@@ -2,6 +2,7 @@ package org.jmotor.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -122,5 +123,42 @@ public class CollectionUtilities {
                 container.add(entry);
             }
         }
+    }
+
+    public static Map<Object, List<Object>> groupBy(Collection collection, Keyed keyed) {
+        Map<Object, List<Object>> result = new HashMap<>();
+        for (Object entry : collection) {
+            Object key = keyed.key(entry);
+            List<Object> values = result.get(key);
+            if (null == values) {
+                values = new ArrayList<>();
+                result.put(key, values);
+            }
+            values.add(entry);
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List map(Collection collection, Mapped mapped) {
+        List result = new ArrayList(collection.size());
+        for (Object entry : collection) {
+            result.add(mapped.map(entry));
+        }
+        return result;
+    }
+
+    public static Object reduce(Collection collection, Reduced reduced) {
+        Object reduce = null;
+        boolean init = false;
+        for (Object entry : collection) {
+            if (!init) {
+                reduce = entry;
+                init = true;
+                continue;
+            }
+            reduce = reduced.reduce(reduce, entry);
+        }
+        return reduce;
     }
 }                                                             
