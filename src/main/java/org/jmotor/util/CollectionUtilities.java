@@ -66,6 +66,7 @@ public class CollectionUtilities {
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     public static Object find(Object[] array, Validator validator) {
         for (Object entry : array) {
             if (validator.validate(entry)) {
@@ -101,6 +102,7 @@ public class CollectionUtilities {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     public static void filter(Collection collection, Validator validator) {
         for (Iterator iterator = collection.iterator(); iterator.hasNext(); ) {
             if (!validator.validate(iterator.next())) {

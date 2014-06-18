@@ -7,6 +7,6 @@ package org.jmotor.util;
  *
  * @author Andy.Ai
  */
-public interface Validator {
-    public boolean validate(Object object);
+public interface Validator<T> {
+    public boolean validate(T t);
 }
