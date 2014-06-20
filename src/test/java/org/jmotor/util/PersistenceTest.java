@@ -19,7 +19,9 @@ public class PersistenceTest {
         SqlGenerator sqlGenerator = new SqlGeneratorImpl();
         SqlStatement sqlStatement = sqlGenerator.generateUpdateSql(Seller.class);
         System.out.println(sqlStatement.getSql());
+        org.junit.Assert.assertTrue(!sqlStatement.getSql().contains("created_at"));
         sqlStatement = sqlGenerator.generateInsertSql(Seller.class);
         System.out.println(sqlStatement.getSql());
+        org.junit.Assert.assertTrue(!sqlStatement.getSql().contains("updated_at"));
     }
 }
