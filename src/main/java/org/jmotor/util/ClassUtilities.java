@@ -9,8 +9,11 @@ import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,6 +29,10 @@ public class ClassUtilities {
     private static final Set<Class<?>> PRIMITIVE_CLASSES = new HashSet<Class<?>>();
 
     static {
+        PRIMITIVE_CLASSES.add(Date.class);
+        PRIMITIVE_CLASSES.add(Number.class);
+        PRIMITIVE_CLASSES.add(BigDecimal.class);
+        PRIMITIVE_CLASSES.add(BigInteger.class);
         PRIMITIVE_CLASSES.add(String.class);
         PRIMITIVE_CLASSES.add(Boolean.class);
         PRIMITIVE_CLASSES.add(Byte.class);
