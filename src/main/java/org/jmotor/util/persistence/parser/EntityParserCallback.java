@@ -1,6 +1,7 @@
 package org.jmotor.util.persistence.parser;
 
 import org.jmotor.util.exception.EntityParseException;
+import org.jmotor.util.persistence.annotation.Ignore;
 
 /**
  * Component:
@@ -15,6 +16,8 @@ public interface EntityParserCallback {
     String[] appendColumns(Class<?> entityClass) throws EntityParseException;
 
     String getColumnName(String propertyName, Class<?> entityClass) throws EntityParseException;
+
+    Ignore.IgnoreType getIgnoreType(String propertyName, Class<?> entityClass) throws EntityParseException;
 
     String[] getPrimaryKeys(Class<?> entityClass) throws EntityParseException;
 

@@ -16,17 +16,17 @@ public class PropertyMapper {
     private Map<String, String> entries = new HashMap<String, String>(10);
     private List<String> insertOrders = new ArrayList<String>(10);
 
-    public void put(String columnName, String propertyName) {
-        if (!entries.containsKey(columnName)) {
-            insertOrders.add(columnName);
+    public void put(String propertyName, String columnName) {
+        if (!entries.containsKey(propertyName)) {
+            insertOrders.add(propertyName);
         }
-        entries.put(columnName, propertyName);
+        entries.put(propertyName, columnName);
     }
 
-    public void add(String columnName, String propertyName) {
-        insertOrders.add(columnName);
-        if (!entries.containsKey(columnName)) {
-            entries.put(columnName, propertyName);
+    public void add(String propertyName, String columnName) {
+        insertOrders.add(propertyName);
+        if (!entries.containsKey(propertyName)) {
+            entries.put(propertyName, columnName);
         }
     }
 

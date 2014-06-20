@@ -1,5 +1,10 @@
 package org.jmotor.util.persistence.dto;
 
+import org.jmotor.util.persistence.annotation.Ignore;
+
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Component:
  * Description:
@@ -12,6 +17,7 @@ public class EntityMapper {
     private String identityName;
     private String[] uniqueNames;
     private PropertyMapper propertyMapper;
+    private Map<Ignore.IgnoreType, Set<String>> ignores;
 
     public String getTableName() {
         return tableName;
@@ -43,5 +49,13 @@ public class EntityMapper {
 
     public void setPropertyMapper(PropertyMapper propertyMapper) {
         this.propertyMapper = propertyMapper;
+    }
+
+    public Map<Ignore.IgnoreType, Set<String>> getIgnores() {
+        return ignores;
+    }
+
+    public void setIgnores(Map<Ignore.IgnoreType, Set<String>> ignores) {
+        this.ignores = ignores;
     }
 }

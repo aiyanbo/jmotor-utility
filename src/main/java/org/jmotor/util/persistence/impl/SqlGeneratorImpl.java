@@ -4,6 +4,7 @@ import org.jmotor.util.CollectionUtilities;
 import org.jmotor.util.StringUtilities;
 import org.jmotor.util.exception.SqlGenerateException;
 import org.jmotor.util.persistence.SqlGenerator;
+import org.jmotor.util.persistence.annotation.Ignore;
 import org.jmotor.util.persistence.dto.EntityMapper;
 import org.jmotor.util.persistence.dto.PropertyMapper;
 import org.jmotor.util.persistence.dto.SqlStatement;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -86,7 +88,7 @@ public class SqlGeneratorImpl implements SqlGenerator {
     private SqlStatement generateInsertSql(Class<?> entityClass, EntityParser parser) {
         try {
             EntityMapper entityMapper = parser.getEntityMapper(entityClass);
-            PropertyMapper propertyNameMapper = entityMapper.getPropertyMapper();
+            PropertyMapper propertyNameMapper = getPropertyMapper(entityMapper, Ignore.IgnoreType.CREATE);
             SqlStatement sqlStatement = new SqlStatement();
             sqlStatement.setPropertyMapper(propertyNameMapper);
             String columns = StringUtilities.join(propertyNameMapper.valueArray(), StringUtilities.COMMA);
@@ -108,7 +110,7 @@ public class SqlGeneratorImpl implements SqlGenerator {
             SqlStatement sqlStatement = new SqlStatement();
             PropertyMapper propertyMapper = new PropertyMapper();
             List<String> identityProperties = getIdentities(entityMapper);
-            PropertyMapper entityPropertyMapper = entityMapper.getPropertyMapper();
+            PropertyMapper entityPropertyMapper = getPropertyMapper(entityMapper, Ignore.IgnoreType.UPDATE);
             List<String> properties = entityPropertyMapper.keyList();
             properties.removeAll(identityProperties);
             String settings = buildSettings(entityPropertyMapper, propertyMapper, properties);
@@ -202,4 +204,20 @@ public class SqlGeneratorImpl implements SqlGenerator {
         return settingsBuilder.toString();
     }
 
+    private PropertyMapper getPropertyMapper(EntityMapper entityMapper, Ignore.IgnoreType ignoreType) {
+        PropertyMapper propertyMapper = entityMapper.getPropertyMapper();
+        Map<Ignore.IgnoreType, Set<String>> ignores = entityMapper.getIgnores();
+        Set<String> ignoreProperties = ignores.get(ignoreType);
+        if (CollectionUtilities.isEmpty(ignoreProperties)) {
+            return propertyMapper;
+        }
+        PropertyMapper result = new PropertyMapper();
+        for (String property : propertyMapper.keyList()) {
+            if (ignoreProperties.contains(property)) {
+                continue;
+            }
+            result.put(property, propertyMapper.get(property));
+        }
+        return result;
+    }
 }

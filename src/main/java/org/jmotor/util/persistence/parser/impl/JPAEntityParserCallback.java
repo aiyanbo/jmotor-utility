@@ -4,6 +4,7 @@ import org.jmotor.util.ClassUtilities;
 import org.jmotor.util.CollectionUtilities;
 import org.jmotor.util.StringUtilities;
 import org.jmotor.util.exception.EntityParseException;
+import org.jmotor.util.persistence.annotation.Ignore;
 import org.jmotor.util.persistence.parser.EntityParserCallback;
 
 import javax.persistence.Column;
@@ -69,6 +70,23 @@ public class JPAEntityParserCallback implements EntityParserCallback {
             databaseColumnName = StringUtilities.nameOfDatabase(propertyName);
         }
         return databaseColumnName;
+    }
+
+    @Override
+    public Ignore.IgnoreType getIgnoreType(String propertyName, Class<?> entityClass) throws EntityParseException {
+        Field field;
+        try {
+            field = ClassUtilities.getField(entityClass, propertyName);
+        } catch (NoSuchFieldException e) {
+            throw new EntityParseException(e.getLocalizedMessage(), e);
+        }
+        if (field != null) {
+            Ignore ignore = field.getAnnotation(Ignore.class);
+            if (ignore != null) {
+                return ignore.type();
+            }
+        }
+        return Ignore.IgnoreType.NONE;
     }
 
     @Override

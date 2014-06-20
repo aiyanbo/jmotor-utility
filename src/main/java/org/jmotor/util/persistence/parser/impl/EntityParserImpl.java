@@ -4,6 +4,7 @@ import org.jmotor.util.ClassUtilities;
 import org.jmotor.util.CollectionUtilities;
 import org.jmotor.util.StringUtilities;
 import org.jmotor.util.exception.EntityParseException;
+import org.jmotor.util.persistence.annotation.Ignore;
 import org.jmotor.util.persistence.dto.EntityMapper;
 import org.jmotor.util.persistence.dto.PropertyMapper;
 import org.jmotor.util.persistence.parser.EntityParser;
@@ -13,6 +14,10 @@ import javax.persistence.Id;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Component:
@@ -40,6 +45,7 @@ public class EntityParserImpl implements EntityParser {
             }
             String identityName = getIdentityName(entityClass, propertyDescriptors);
             PropertyMapper propertyMapper = new PropertyMapper();
+            Map<Ignore.IgnoreType, Set<String>> ignores = new HashMap<>();
             for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
                 boolean included = true;
                 String propertyName = propertyDescriptor.getName();
@@ -52,11 +58,31 @@ public class EntityParserImpl implements EntityParser {
                     }
                 }
                 if (included) {
-                    String columnName = StringUtilities.nameOfDatabase(propertyName);
+                    String columnName;
+                    Ignore.IgnoreType ignoreType;
                     if (callback != null) {
-                        callback.getColumnName(propertyName, entityClass);
+                        columnName = callback.getColumnName(propertyName, entityClass);
+                        ignoreType = callback.getIgnoreType(propertyName, entityClass);
+                    } else {
+                        columnName = StringUtilities.nameOfDatabase(propertyName);
+                        ignoreType = Ignore.IgnoreType.NONE;
                     }
                     propertyMapper.put(propertyName, columnName);
+                    switch (ignoreType) {
+                        case NONE:
+                            break;
+                        case CREATE:
+                        case UPDATE:
+                            Set<String> ignoreProperties = ignores.get(ignoreType);
+                            if (ignoreProperties == null) {
+                                ignoreProperties = new HashSet<>();
+                                ignores.put(ignoreType, ignoreProperties);
+                            }
+                            ignoreProperties.add(propertyName);
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
             if (CollectionUtilities.isNotEmpty(appendColumns)) {
