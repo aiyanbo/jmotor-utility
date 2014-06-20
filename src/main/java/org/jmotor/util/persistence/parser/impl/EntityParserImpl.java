@@ -91,6 +91,7 @@ public class EntityParserImpl implements EntityParser {
                 }
             }
             EntityMapper entityMapper = new EntityMapper();
+            entityMapper.setIgnores(ignores);
             entityMapper.setTableName(tableName);
             entityMapper.setIdentityName(identityName);
             entityMapper.setUniqueNames(uniqueNames);

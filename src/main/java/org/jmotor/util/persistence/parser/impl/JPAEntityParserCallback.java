@@ -41,7 +41,7 @@ public class JPAEntityParserCallback implements EntityParserCallback {
                         transientSymbol = field.getAnnotation(Transient.class);
                     }
                 }
-                if (transientSymbol != null || !ClassUtilities.isPrimitiveClass(reader.getReturnType())) {
+                if (transientSymbol != null) {
                     propertyNames.add(propertyDescriptor.getName());
                 }
             }
