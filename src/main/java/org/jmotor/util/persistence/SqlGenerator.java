@@ -11,6 +11,7 @@ import org.jmotor.util.persistence.parser.EntityParserCallback;
  * @author Andy.Ai
  */
 public interface SqlGenerator {
+
     SqlStatement generateInsertSql(Class<?> entityClass);
 
     SqlStatement generateInsertSql(Class<?> entityClass, EntityParserCallback callback);
@@ -22,4 +23,8 @@ public interface SqlGenerator {
     SqlStatement generateDeleteSql(Class<?> entityClass);
 
     SqlStatement generateDeleteSql(Class<?> entityClass, EntityParserCallback callback);
+
+    SqlStatement generateIdentifierSql(Class<?> entityClass);
+
+    SqlStatement generateIdentifierSql(Class<?> entityClass, EntityParserCallback callback);
 }

@@ -51,6 +51,11 @@ public class SqlGeneratorImpl implements SqlGenerator {
     }
 
     @Override
+    public SqlStatement generateIdentifierSql(Class<?> entityClass) {
+        return generateIdentifierSql(entityClass, DEFAULT_ENTITY_PARSER);
+    }
+
+    @Override
     public SqlStatement generateInsertSql(Class<?> entityClass, EntityParserCallback callback) {
         EntityParserImpl entityParser = new EntityParserImpl();
         entityParser.setCallback(callback);
@@ -69,6 +74,13 @@ public class SqlGeneratorImpl implements SqlGenerator {
         EntityParserImpl entityParser = new EntityParserImpl();
         entityParser.setCallback(callback);
         return generateDeleteSql(entityClass, entityParser);
+    }
+
+    @Override
+    public SqlStatement generateIdentifierSql(Class<?> entityClass, EntityParserCallback callback) {
+        EntityParserImpl entityParser = new EntityParserImpl();
+        entityParser.setCallback(callback);
+        return generateIdentifierSql(entityClass, entityParser);
     }
 
     private SqlStatement generateInsertSql(Class<?> entityClass, EntityParser parser) {
@@ -120,6 +132,24 @@ public class SqlGeneratorImpl implements SqlGenerator {
             List<String> identityProperties = getIdentities(entityMapper);
             String conditions = buildConditions(entityMapper.getPropertyMapper(), propertyMapper, identityProperties);
             String sql = SqlTemplate.DELETE.replace(SqlTemplate.TABLE_NAME_SYMBOL, entityMapper.getTableName());
+            sql = sql.replace(SqlTemplate.CONDITIONS_SYMBOL, conditions);
+            sqlStatement.setSql(sql);
+            sqlStatement.setPropertyMapper(propertyMapper);
+            return sqlStatement;
+        } catch (Exception e) {
+            throw new SqlGenerateException(e.getMessage(), e);
+        }
+    }
+
+    private SqlStatement generateIdentifierSql(Class<?> entityClass, EntityParser parser) {
+        try {
+            EntityMapper entityMapper = parser.getEntityMapper(entityClass);
+            SqlStatement sqlStatement = new SqlStatement();
+            PropertyMapper propertyMapper = new PropertyMapper();
+            List<String> identityProperties = getIdentities(entityMapper);
+            PropertyMapper entityPropertyMapper = entityMapper.getPropertyMapper();
+            String conditions = buildConditions(entityPropertyMapper, propertyMapper, identityProperties);
+            String sql = SqlTemplate.IDENTIFIER.replace(SqlTemplate.TABLE_NAME_SYMBOL, entityMapper.getTableName());
             sql = sql.replace(SqlTemplate.CONDITIONS_SYMBOL, conditions);
             sqlStatement.setSql(sql);
             sqlStatement.setPropertyMapper(propertyMapper);

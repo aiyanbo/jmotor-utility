@@ -16,4 +16,5 @@ public interface SqlTemplate {
     String INSERT = "insert into ${tableName}(${columns}) values(${valuesPlaceholder})";
     String DELETE = "delete from ${tableName} where ${conditions}";
     String UPDATE = "update ${tableName} set ${settings} where ${conditions}";
+    String IDENTIFIER = "select * from ${tableName} where ${conditions}";
 }
