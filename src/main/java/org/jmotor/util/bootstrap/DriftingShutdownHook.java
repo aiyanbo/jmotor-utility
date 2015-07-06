@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * @author Andy.Ai
  */
-public class AnonymousShutdownHook {
+public class DriftingShutdownHook {
     /**
      * De-registers a previously-registered virtual-machine shutdown hook by name.
      *
